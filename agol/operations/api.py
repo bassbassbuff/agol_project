@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from .models import SafetyChecklist
 from customers.serializers import OrderSerializer
 from .services import checklist_create
-from .selectors import order_list, checklist_details
+from .selectors import order_list, checklist_details, checklist_details_list
 from .serializers import VehicleSerializer
 class ChecklistCreateApi(APIView):
     class InputSerializer(serializers.Serializer):
@@ -73,3 +73,19 @@ class ChecklistDetailApi(APIView):
 
 #         return Response(data)
 
+
+class PrintSafetyListApi(APIView):
+    
+    
+    
+    class OutputSerializer(serializers.Serializer):
+        id = serializers.CharField()
+        trailer_details = VehicleSerializer(source="trailer", read_only=True)
+        truck_details = VehicleSerializer(source="truck", read_only=True)
+
+
+    def get(self, request):
+        serializer = self.OutputSerializer(checklist_details_list(), many=True)
+        # serializer = SafetyChecklist.objects.filter().select_related().all()
+        # print(serializer.data)
+        return Response(serializer.data)

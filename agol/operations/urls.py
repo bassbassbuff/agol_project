@@ -15,7 +15,7 @@ from .views import (LoginView,
                     # SafetyCheckListDetailAPIView
                     )
 
-from .api import ChecklistCreateApi, ChecklistListApi, ChecklistDetailApi
+from .api import ChecklistCreateApi, ChecklistListApi, ChecklistDetailApi, PrintSafetyListApi
 
 # from accounts.views import UserCreate
 
@@ -32,6 +32,7 @@ urlpatterns = [
     path('checklistcreate/', ChecklistCreateApi.as_view(), name="check-list"),    
     path('checklist/', ChecklistListApi.as_view(), name="check-list"),    
     path('checklist/<int:pk>/', ChecklistDetailApi.as_view(), name="detail-checklist"),
+    path('printsafety/', PrintSafetyListApi.as_view(), name="safety-list"),
     
     # path('checklist/<int:pk>/', SafetyCheckListDetailAPIView.as_view(), name="detail-checklist"),
     path('checklist-questions/', SafetyCheckListQuestionCreateAPIView.as_view(), name="checklistquestions"),

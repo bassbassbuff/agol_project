@@ -72,7 +72,7 @@
                 this.showPreviousButton = false
 
                 await axios
-                    .get(`/checklist/`)
+                    .get(`/printsafety/`)
                     .then(response => {
                         console.log(response.data)
                         this.orders = response.data
