@@ -1,5 +1,5 @@
 from typing import List
-from .models import Order, SafetyChecklist, SafetyChecklistQuestion, Labinspection, LabResultsDecision
+from .models import Order, SafetyChecklist, SafetyChecklistQuestion, Labinspection, LabResultsDecision, Loading
 from django.shortcuts import get_object_or_404
 
 def order_status_update(order, order_status):
@@ -29,6 +29,11 @@ def lab_results_create(*,order_id:str, order_status:str) -> LabResultsDecision:
         else:
             LabResultsDecision.objects.create(order=order_obj)
     order_status_update(order_obj, order_status)
+
+def loading_create(*,order_id:str, net_weight:str, tare_weight:str, gross_weight:str) -> Loading:
+    order_obj = get_object_or_404(Order, id=order_id)
+    Loading.objects.create(order=order_obj, net_weight=net_weight, tare_weight=tare_weight, gross_weight=gross_weight)
+    order_status_update(order_obj, 'LOADED')
         
 
 

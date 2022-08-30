@@ -41,14 +41,14 @@ class Command(BaseCommand):
         #     CustomerTruck.objects.create(registration=registration, customer=customer, truck=truck)
 
 
-        for _ in range(450):
-            name = fake.name()
-            national_id = random.randint(22155541, 554544541)
-            epra_no = random.randint(2215, 554544)
-            Driver.objects.create(name=name, national_id=national_id, epra_no=epra_no)
+        # for _ in range(450):
+        #     name = fake.name()
+        #     national_id = random.randint(22155541, 554544541)
+        #     epra_no = random.randint(2215, 554544)
+        #     Driver.objects.create(name=name, national_id=national_id, epra_no=epra_no)
 
 
-        for _ in range(30):
+        for _ in range(1300):
             customer = Customer.objects.get(pk=random.randint(1, 150))    
             destination = 'KSM'    
             order_quantity = random.randint(25000, 30000)  
@@ -59,17 +59,17 @@ class Command(BaseCommand):
             Order.objects.create(customer=customer, destination=destination, order_quantity=order_quantity, driver=driver, truck=truck, trailer=trailer)
 
 
-        for _ in range(30):
-            customer = Customer.objects.get(pk=random.randint(0, 100))
-            name = fake.name()
-            driver = Driver.objects.get(pk=random.randint(0, 100))
-            CustomerDriver.objects.create(customer=customer, name=name, driver=driver)
+        # for _ in range(30):
+        #     customer = Customer.objects.get(pk=random.randint(0, 100))
+        #     name = fake.name()
+        #     driver = Driver.objects.get(pk=random.randint(0, 100))
+        #     CustomerDriver.objects.create(customer=customer, name=name, driver=driver)
 
-        for _ in range(30):
+        for _ in range(1030):
             customer = Customer.objects.get(pk=random.randint(1, 50))
             quantity = random.randint(2215, 554544)
             BulkOrder.objects.create(customer=customer, quantity=quantity)
         
-        for _ in range(4):
-            question_desc = fake.sentence()
-            SafetyChecklistQuestion.objects.create(question_desc=question_desc)
+        # for _ in range(4):
+        #     question_desc = fake.sentence()
+        #     SafetyChecklistQuestion.objects.create(question_desc=question_desc)

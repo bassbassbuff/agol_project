@@ -66,7 +66,7 @@
                 this.showPreviousButton = false
 
                 await axios
-                    .get(`/loading/`)
+                    .get(`/loading-list/`)
                     .then(response => {
                         console.log(response.data)
                         this.orders = response.data

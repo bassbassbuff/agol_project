@@ -9,7 +9,7 @@ def get_order(pk):
 
 
 def order_list(order_status) -> QuerySet[Order]:
-    return(Order.objects.filter(order_status=order_status))
+    return(Order.objects.filter(order_status=order_status).select_related())
 
 def checklist_details_list() -> QuerySet[SafetyChecklist]:
     safety_list=[]
@@ -35,8 +35,7 @@ def checklist_details_list() -> QuerySet[SafetyChecklist]:
 
 def checklist_details(pk) -> QuerySet[SafetyChecklist]:
     return(SafetyChecklist.objects.filter(order_id=pk).select_related())
-
-    return(SafetyChecklist.objects.filter(personscore_set__name="Bob").prefetch_related("personscore_set"))
+    # return(SafetyChecklist.objects.filter(personscore_set__name="Bob").prefetch_related("personscore_set"))
 
 def labinspection_details(pk) -> QuerySet[Labinspection]:
     

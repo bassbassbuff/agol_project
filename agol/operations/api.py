@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import SafetyChecklist
 from customers.serializers import OrderSerializer
-from .services import checklist_create, lab_create, lab_results_create
+from .services import checklist_create, lab_create, loading_create, lab_results_create
 from .selectors import order_list, checklist_details, labinspection_details, checklist_details_list, get_order
 from .serializers import VehicleSerializer
 class ChecklistCreateAPI(APIView):
@@ -154,7 +154,7 @@ class LabInspectionDetailsAPI(APIView):
         return Response(serializer.data)
 
 
-class LabSealListAPIView(APIView):
+class LabSealListAPI(APIView):
     class OutputSerializer(serializers.Serializer):
         id = serializers.CharField()
         trailer_details = VehicleSerializer(source="trailer", read_only=True)
@@ -164,4 +164,39 @@ class LabSealListAPIView(APIView):
         serializer = self.OutputSerializer(order_list('SEAL'), many=True)
         return Response(serializer.data)
 
+class LabVentListAPI(APIView):
+    class OutputSerializer(serializers.Serializer):
+        id = serializers.CharField()
+        trailer_details = VehicleSerializer(source="trailer", read_only=True)
+        truck_details = VehicleSerializer(source="truck", read_only=True)
 
+    def get(self, request):
+        serializer = self.OutputSerializer(order_list('VENT'), many=True)
+        return Response(serializer.data)
+
+class LoadingListAPI(APIView):
+    class OutputSerializer(serializers.Serializer):
+        id = serializers.CharField()
+        trailer_details = VehicleSerializer(source="trailer", read_only=True)
+        truck_details = VehicleSerializer(source="truck", read_only=True)
+
+    def get(self, request):
+        serializer = self.OutputSerializer(order_list('LOADING'), many=True)
+        return Response(serializer.data)
+
+class LoadingCreateAPI(APIView):
+    class InputSerializer(serializers.Serializer):                
+        order_id = serializers.IntegerField()
+        net_weight = serializers.IntegerField()
+        tare_weight = serializers.IntegerField()
+        gross_weight = serializers.IntegerField()
+
+    def post(self, serializer):
+        order = self.request.data['order']
+        net_weight = self.request.data['net_weight']
+        tare_weight = self.request.data['tare_weight']
+        gross_weight = self.request.data['gross_weight']    
+        serializer = self.InputSerializer(data={'order_id':order, 'net_weight':net_weight, 'tare_weight':tare_weight, 'gross_weight':gross_weight})
+        serializer.is_valid(raise_exception=True)
+        loading_create(**serializer.validated_data)
+        return Response(status=status.HTTP_201_CREATED)
