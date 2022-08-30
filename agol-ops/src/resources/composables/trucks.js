@@ -31,7 +31,7 @@ export default function useSafetyForm() {
     const getLabResults = async () => {
         let response = await axios.get(`/lab-results/${orderid.value}`)
         console.log(response.data)
-        labResults.value = response.data;
+        labResults.value = response.data[0];
     }
 
     // const storeCompany = async (data) => {

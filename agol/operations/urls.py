@@ -4,18 +4,29 @@ from django.urls import path, include
 # from rest_framework.routers import DefaultRouter, SimpleRouter
 from .views import (LoginView, 
                     ScanOrder, 
-                    LabInspectionListCreateAPIView,
+                    # LabInspectionListCreateAPIView,
                     # SafetyCheckListCreateAPIView,
                     LabResultsVentListCreateAPIView,
                     LoadingListCreateAPIView,
                     OrderDetailView,
-                    LabResultsDetailView,
+                    # LabResultsDetailView,
                     SafetyCheckListQuestionCreateAPIView,
-                    LabResultsListCreateAPIView,
+                    # LabResultsListCreateAPIView,
                     # SafetyCheckListDetailAPIView
                     )
 
-from .api import ChecklistCreateApi, ChecklistListApi, ChecklistDetailApi, PrintSafetyListApi
+from .api import (
+                    ChecklistCreateAPI, 
+                    ChecklistListAPI, 
+                    ChecklistDetailAPI, 
+                    PrintSafetyListAPI, 
+                    LabInspectionListAPI,
+                    LabInspectionCreateAPI,
+                    LabResultsCreateAPI,
+                    LabResultsListAPI,
+                    LabInspectionDetailsAPI,
+                    LabSealListAPIView
+                    )
 
 # from accounts.views import UserCreate
 
@@ -29,17 +40,23 @@ urlpatterns = [
     path('order/<int:pk>/', OrderDetailView.as_view(), name="order_details"),
     path("scan-order/<int:pk>/", ScanOrder.as_view(), name="scan-order"),
     # path('checklist/', SafetyCheckListCreateAPIView.as_view(), name="check-list"),
-    path('checklistcreate/', ChecklistCreateApi.as_view(), name="check-list"),    
-    path('checklist/', ChecklistListApi.as_view(), name="check-list"),    
-    path('checklist/<int:pk>/', ChecklistDetailApi.as_view(), name="detail-checklist"),
-    path('printsafety/', PrintSafetyListApi.as_view(), name="safety-list"),
+    path('checklistcreate/', ChecklistCreateAPI.as_view(), name="check-list"),    
+    path('checklist/', ChecklistListAPI.as_view(), name="check-list"),    
+    path('checklist/<int:pk>/', ChecklistDetailAPI.as_view(), name="detail-checklist"),
+    path('printsafety/', PrintSafetyListAPI.as_view(), name="safety-list"),
     
     # path('checklist/<int:pk>/', SafetyCheckListDetailAPIView.as_view(), name="detail-checklist"),
     path('checklist-questions/', SafetyCheckListQuestionCreateAPIView.as_view(), name="checklistquestions"),
-    path('lab-inspection/', LabInspectionListCreateAPIView.as_view(), name="lab-inspection"),
-    path('lab-details/',LabInspectionListCreateAPIView.as_view(), name="lab-details"),
-    path('lab-results/',LabResultsListCreateAPIView.as_view(), name="lab-results"),
-    path('lab-results/<int:pk>/',LabResultsDetailView.as_view(), name="lab-results-details"),
+    path('lab-inspection/', LabInspectionListAPI.as_view(), name="lab-inspection"),
+    # path('lab-inspection/', LabInspectionListCreateAPIView.as_view(), name="lab-inspection"),
+    path('lab-create/',LabInspectionCreateAPI.as_view(), name="lab-create"),
+    # path('lab-details/',LabInspectionListCreateAPIView.as_view(), name="lab-details"),
+    path('lab-results/',LabResultsListAPI.as_view(), name="lab-results"),
+    path('lab-results-create/',LabResultsCreateAPI.as_view(), name="lab-results"),
+    # path('lab-results/',LabResultsListCreateAPIView.as_view(), name="lab-results"),
+    path('lab-results/<int:pk>/',LabInspectionDetailsAPI.as_view(), name="lab-results-details"),
+    # path('lab-results/<int:pk>/',LabResultsDetailView.as_view(), name="lab-results-details"),
+    path('lab-seal/',LabSealListAPIView.as_view(), name="lab-seal"),
     path('lab-vent/',LabResultsVentListCreateAPIView.as_view(), name="lab-results-details"),
     path('loading/',LoadingListCreateAPIView.as_view(), name="loading"),
     

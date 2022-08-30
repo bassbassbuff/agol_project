@@ -50,7 +50,7 @@ methods: {
           };
           console.log(payload)
           await axios
-          .post(`/lab-details/`, payload)
+          .post(`/lab-create/`, payload)
           .then((response) => {
             console.log(response.data)
           })
@@ -72,7 +72,7 @@ methods: {
     <div class="field">
         <label>Truck Pressure</label>
         <div class="control">
-            <input type="number" name="truck_pressure" class="input" v-model="truck_pressure">
+            <input type="text" name="truck_pressure" class="input" v-model="truck_pressure">
         </div>
     </div>
 

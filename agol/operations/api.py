@@ -1,21 +1,22 @@
-from secrets import choice
+from django.shortcuts import get_object_or_404
+
 from rest_framework import status, serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import SafetyChecklist
 from customers.serializers import OrderSerializer
-from .services import checklist_create
-from .selectors import order_list, checklist_details, checklist_details_list
+from .services import checklist_create, lab_create, lab_results_create
+from .selectors import order_list, checklist_details, labinspection_details, checklist_details_list, get_order
 from .serializers import VehicleSerializer
-class ChecklistCreateApi(APIView):
+class ChecklistCreateAPI(APIView):
     class InputSerializer(serializers.Serializer):
         order_id = serializers.CharField()
         question_id = serializers.IntegerField()
         checklist_choice = serializers.CharField()
 
     def post(self, request):
-        que = []
-        choices = []
+        # que = []
+        # choices = []
         order = self.request.data['order']
         questions = self.request.data['questions']
         for index in range(len(questions)):
@@ -24,10 +25,10 @@ class ChecklistCreateApi(APIView):
             checklist_choice = question_list[2]
             # print(checklist_choice)
             question = question_list[0]
-            que.append(question)
-            choices.append(checklist_choice)
-            print(choices)
-            print(que)
+            # que.append(question)
+            # choices.append(checklist_choice)
+            # print(choices)
+            # print(que)
             serializer = self.InputSerializer(data={'order_id':order, 'question_id':question, 'checklist_choice':checklist_choice})
             serializer.is_valid(raise_exception=True)
 
@@ -38,7 +39,7 @@ class ChecklistCreateApi(APIView):
         return Response(status=status.HTTP_201_CREATED)
 
 
-class ChecklistListApi(APIView):
+class ChecklistListAPI(APIView):
     class OutputSerializer(serializers.Serializer):
         id = serializers.CharField()
         trailer_details = VehicleSerializer(source="trailer", read_only=True)
@@ -51,7 +52,7 @@ class ChecklistListApi(APIView):
         return Response(serializer.data)
 
 
-class ChecklistDetailApi(APIView):
+class ChecklistDetailAPI(APIView):
     
     class OutputSerializer(serializers.ModelSerializer):        
         class Meta:
@@ -74,10 +75,7 @@ class ChecklistDetailApi(APIView):
 #         return Response(data)
 
 
-class PrintSafetyListApi(APIView):
-    
-    
-    
+class PrintSafetyListAPI(APIView):    
     class OutputSerializer(serializers.Serializer):
         id = serializers.CharField()
         trailer_details = VehicleSerializer(source="trailer", read_only=True)
@@ -89,3 +87,81 @@ class PrintSafetyListApi(APIView):
         # serializer = SafetyChecklist.objects.filter().select_related().all()
         # print(serializer.data)
         return Response(serializer.data)
+
+
+class LabInspectionListAPI(APIView):
+    class OutputSerializer(serializers.Serializer):
+        id = serializers.CharField()
+        trailer_details = VehicleSerializer(source="trailer", read_only=True)
+        truck_details = VehicleSerializer(source="truck", read_only=True)
+
+
+    def get(self, request):
+        serializer = self.OutputSerializer(order_list('LAB'), many=True)
+        print(serializer.data)
+        return Response(serializer.data)
+
+class LabInspectionCreateAPI(APIView):
+    class InputSerializer(serializers.Serializer):
+        pressure = serializers.IntegerField()
+        oxygen = serializers.IntegerField()
+        methane = serializers.IntegerField()
+        order_id = serializers.IntegerField()
+
+    def post(self, request):
+        order = self.request.data['order']
+        pressure = self.request.data['truck_pressure']
+        oxygen = self.request.data['oxygen_content']
+        methane = self.request.data['methane_content'] 
+        serializer = self.InputSerializer(data={'order_id':order, 'pressure':pressure, 'oxygen':oxygen, 'methane':methane})
+        serializer.is_valid(raise_exception=True)
+        lab_create(**serializer.validated_data)
+        return Response(status=status.HTTP_201_CREATED)
+
+class LabResultsListAPI(APIView):
+    class OutputSerializer(serializers.Serializer):
+        id = serializers.CharField()
+        trailer_details = VehicleSerializer(source="trailer", read_only=True)
+        truck_details = VehicleSerializer(source="truck", read_only=True)
+
+    def get(self, request):
+        serializer = self.OutputSerializer(order_list('LABRESULTS'), many=True)
+        return Response(serializer.data)
+
+class LabResultsCreateAPI(APIView):
+    class InputSerializer(serializers.Serializer):
+        order_status = serializers.CharField()        
+        order_id = serializers.IntegerField()
+
+    def post(self, serializer):
+        order = self.request.data['order']
+        order_status = self.request.data['status']
+        serializer = self.InputSerializer(data={'order_id':order, 'order_status':order_status})
+        serializer.is_valid(raise_exception=True)
+        lab_results_create(**serializer.validated_data)
+        return Response(status=status.HTTP_201_CREATED)
+
+class LabInspectionDetailsAPI(APIView):
+    class OutputSerializer(serializers.Serializer):
+        id = serializers.IntegerField()
+        pressure = serializers.IntegerField()
+        oxygen = serializers.IntegerField()
+        methane = serializers.IntegerField()
+        order_id = serializers.IntegerField()
+
+    def get(self, serializer, pk=None):
+        serializer = self.OutputSerializer(labinspection_details(pk), many=True)
+        return Response(serializer.data)
+
+
+class LabSealListAPIView(APIView):
+    class OutputSerializer(serializers.Serializer):
+        id = serializers.CharField()
+        trailer_details = VehicleSerializer(source="trailer", read_only=True)
+        truck_details = VehicleSerializer(source="truck", read_only=True)
+
+    def get(self, request):
+        serializer = self.OutputSerializer(order_list('SEAL'), many=True)
+        return Response(serializer.data)
+
+

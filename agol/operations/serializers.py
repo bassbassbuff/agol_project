@@ -153,26 +153,26 @@ class OrderSerializer(serializers.ModelSerializer):
         ),
         fields = '__all__'
 
-class LabResultsSerializer(serializers.ModelSerializer):
-    # oxygen = LabinspectionSerializer(read_only=True)
-    # pressure = LabinspectionSerializer(read_only=True)
-    # nitrogen = LabinspectionSerializer(read_only=True)
-    # methane = LabinspectionSerializer(read_only=True)
+# class LabResultsSerializer(serializers.ModelSerializer):
+#     # oxygen = LabinspectionSerializer(read_only=True)
+#     # pressure = LabinspectionSerializer(read_only=True)
+#     # nitrogen = LabinspectionSerializer(read_only=True)
+#     # methane = LabinspectionSerializer(read_only=True)
     
-    # read_only_fields = (
-    #     'id', 'truck', 'truck_details', 'trailer', 'trailer_details'
-    #     )
+#     # read_only_fields = (
+#     #     'id', 'truck', 'truck_details', 'trailer', 'trailer_details'
+#     #     )
     
-    class Meta:
-        model = Labinspection
-        fields = [
-                    'id',
-                    'oxygen',
-                    'pressure',
-                    'nitrogen',
-                    'methane',                    
+#     class Meta:
+#         model = Labinspection
+#         fields = [
+#                     'id',
+#                     'oxygen',
+#                     'pressure',
+#                     'nitrogen',
+#                     'methane',                    
                     
-                ]
+#                 ]
 
 class LabResultsDecisionSerializer(serializers.ModelSerializer):
     class Meta:

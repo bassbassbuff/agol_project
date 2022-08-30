@@ -33,7 +33,7 @@ setup() {
           };
           console.log(payload)
           await axios
-          .post(`/lab-results/`, payload)
+          .post(`/lab-results-create/`, payload)
           .then((response) => {
             // console.log(response.data)
           })
@@ -43,6 +43,7 @@ setup() {
   return {
 
     submitForm,
+    getLabResults,
     // labResultsSelect,
     truckid,
     trailerid,
@@ -96,16 +97,18 @@ data() {
 </script>
 
 <template>
-    <div>
+    <div>     
     <h4>Truck Reg: {{ truck }} </h4>
     <h4>Trailer Reg: {{ trailer }} </h4>
     </div>
       <h3>Lab Results</h3>
+      
 
       <h4>Oxygen: {{ labResults.oxygen }}</h4>
       <h4>Pressure: {{ labResults.pressure }}</h4>
       <h4>Nitrogen: {{ labResults.nitrogen }}</h4>
       <h4>Methane: {{ labResults.methane }}</h4>
+      <!-- </div> -->
       <div>
       <button @click="submitForm" type="submit" value="LOADING">Proceed</button>
       </div>

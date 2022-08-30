@@ -14,6 +14,8 @@ import Loading from "../views/Loading.vue"
 import LoadingDetails from "../components/LoadingDetails.vue"
 import PrintSafetyInspection from "../views/PrintSafetyInspection.vue"
 import PrintSafetyDetails from "../components/PrintSafetyDetails.vue"
+import LabSeal from "../views/LabSeal.vue"
+import LabSealDetails from "../components/LabSealDetails.vue"
 
 const routes = [
   {
@@ -60,6 +62,16 @@ const routes = [
     path: "/lab-results/:id",
     name: "LabResultsDetails",
     component: LabResultsDetails,
+  },
+  {
+    path: "/lab-seal/",
+    name: "LabSeal",
+    component: LabSeal,
+  },
+  {
+    path: "/lab-seal/:id",
+    name: "LabSealDetails",
+    component: LabSealDetails,
   },
   {
     path: "/lab-vent/",

@@ -4,6 +4,7 @@ import useSafetyForm from "../resources/composables/trucks";
 import {onMounted} from "vue";
 
 export default {
+  name: 'LabSealDetails',
 setup() {
   const { truck, trailer, truckid, trailerid, labResults, orderid, getTruck, getLabResults } = useSafetyForm()
 

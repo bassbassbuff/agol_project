@@ -10,7 +10,7 @@ from .models import Order, SafetyChecklist, Labinspection, SafetyChecklistQuesti
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import    (LabResultsDecisionSerializer, 
                             LabResultsDecisionSerializer,
-                            LabResultsSerializer, 
+                            # LabResultsSerializer, 
                             # SafetyChecklistSerializer,
                             ScanOrderSerializer, 
                             SafetyChecklistQuestionSerializer, 
@@ -125,10 +125,10 @@ class SafetyCheckListQuestionCreateAPIView(generics.ListCreateAPIView):
 
 
 
-class LabinspectionViewSet(viewsets.ModelViewSet):
+# class LabinspectionViewSet(viewsets.ModelViewSet):
     
-    serializer_class = LabinspectionSerializer
-    queryset = Labinspection.objects.all()
+#     serializer_class = LabinspectionSerializer
+#     queryset = Labinspection.objects.all()
     # def get_queryset(self):
     #     # print(self.request.data)
     #     return self.queryset
@@ -136,44 +136,44 @@ class LabinspectionViewSet(viewsets.ModelViewSet):
             
 
 
-class LabInspectionListCreateAPIView(generics.ListCreateAPIView):
-    serializer_class = LabinspectionSerializer
-    queryset = Order.objects.filter(order_status='LAB')
+# class LabInspectionListCreateAPIView(generics.ListCreateAPIView):
+#     serializer_class = LabinspectionSerializer
+#     queryset = Order.objects.filter(order_status='LAB')
 
 
-    def perform_create(self, serializer):
-        print(self.request.data)
-        order = get_object_or_404(Order, id=self.request.data['order'])
-        pressure = self.request.data['truck_pressure']
-        oxygen = self.request.data['oxygen_content']
-        methane = self.request.data['methane_content']
-        update_order = order_status_update(order, 'LABRESULTS')        
-        return serializer.save(order=order, pressure=pressure, oxygen=oxygen, methane=methane)
+#     def perform_create(self, serializer):
+#         print(self.request.data)
+#         order = get_object_or_404(Order, id=self.request.data['order'])
+#         pressure = self.request.data['truck_pressure']
+#         oxygen = self.request.data['oxygen_content']
+#         methane = self.request.data['methane_content']
+#         update_order = order_status_update(order, 'LABRESULTS')        
+#         return serializer.save(order=order, pressure=pressure, oxygen=oxygen, methane=methane)
 
-class LabResultsListCreateAPIView(generics.ListCreateAPIView):
-    serializer_class = LabinspectionSerializer
-    queryset = Order.objects.filter(order_status='LABRESULTS')
+# class LabResultsListCreateAPIView(generics.ListCreateAPIView):
+#     serializer_class = LabinspectionSerializer
+#     queryset = Order.objects.filter(order_status='LABRESULTS')
 
-    # def get(self, pk, *args, **kwargs):
-        # print(self.request.data)
-        # print(pk)
+#     # def get(self, pk, *args, **kwargs):
+#         # print(self.request.data)
+#         # print(pk)
 
 
-    def perform_create(self, serializer):
-        print(self.request.data)
-        order = get_object_or_404(Order, id=self.request.data['order'])
-        update_order = order_status_update(order, self.request.data['status'])
-        return Response(status=202)
+#     def perform_create(self, serializer):
+#         print(self.request.data)
+#         order = get_object_or_404(Order, id=self.request.data['order'])
+#         update_order = order_status_update(order, self.request.data['status'])
+#         return Response(status=202)
 
-class LabResultsDetailView(APIView):
-    serializer_class = LabResultsSerializer    
+# class LabResultsDetailView(APIView):
+#     serializer_class = LabResultsSerializer    
 
-    model = Labinspection
+#     model = Labinspection
 
-    def get(self, request, pk=None):
-        queryset = Labinspection.objects.filter(order_id=pk).first()
-        serializer = LabResultsSerializer(queryset)
-        return Response(serializer.data)    
+#     def get(self, request, pk=None):
+#         queryset = Labinspection.objects.filter(order_id=pk).first()
+#         serializer = LabResultsSerializer(queryset)
+#         return Response(serializer.data)    
 
 
 class LabResultsVentListCreateAPIView(generics.ListCreateAPIView):
