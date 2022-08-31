@@ -1,11 +1,9 @@
 import json
-from rest_framework import viewsets, filters, status, generics
-from rest_framework.decorators import api_view
-from django.shortcuts import render, get_object_or_404
+from rest_framework import status, generics
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from django.views.decorators.csrf import csrf_exempt
 from .models import Order, SafetyChecklistQuestion
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import    (                          
@@ -15,10 +13,6 @@ from .serializers import    (
                             )
 from django.contrib.auth import authenticate
 
-
-def order_status_update(order, order_status):
-    order.order_status = order_status
-    order.save()
 
 def get_tokens_for_user(user):
     
@@ -82,3 +76,5 @@ class ScanOrder(generics.UpdateAPIView):
 class SafetyCheckListQuestionCreateAPIView(generics.ListCreateAPIView):    
     serializer_class = SafetyChecklistQuestionSerializer
     queryset = SafetyChecklistQuestion.objects.all()
+
+

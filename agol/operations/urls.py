@@ -30,7 +30,9 @@ urlpatterns = [
     path("scan-order/<int:pk>/", ScanOrder.as_view(), name="scan-order"),
     path('checklistcreate/', ChecklistCreateAPI.as_view(), name="check-list"),    
     path('checklist/', ChecklistListAPI.as_view(), name="check-list"),    
-    path('checklist/<int:pk>/', ChecklistDetailAPI.as_view(), name="detail-checklist"),
+    # path('checklist/<int:pk>/', ChecklistDetailAPI.as_view(), name="detail-checklist"),
+    path('checklist/<int:pk>/', ChecklistDetailAPI.as_view(),name="detail-checklist"),
+    
     path('printsafety/', PrintSafetyListAPI.as_view(), name="safety-list"),
     path('checklist-questions/', SafetyCheckListQuestionCreateAPIView.as_view(), name="checklistquestions"),
     path('lab-inspection/', LabInspectionListAPI.as_view(), name="lab-inspection"),
