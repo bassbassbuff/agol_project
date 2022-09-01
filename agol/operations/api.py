@@ -86,7 +86,7 @@ class ChecklistDetailAPI(APIView):
         #     attachment_filename='booking.pdf', cache_timeout=0))
 
         response = HttpResponse(pdf, headers={
-        'Content-Type': 'application/vnd.ms-excel',
+        'Content-Type': 'application/pdf',
         'Content-Disposition': 'attachment; filename="foo.pdf"',
         })
         return(response)

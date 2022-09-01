@@ -1,29 +1,14 @@
 <script>
 import axios from 'axios'
-import useSafetyForm from "../resources/composables/trucks";
-import {onMounted} from "vue";
+
 
 export default {
 name: 'PrintSafetyDetails',
-setup() {
-  const { truck, trailer, truckid, trailerid, orderid, getTruck } = useSafetyForm()
-  
-  onMounted(getTruck())
 
-  return {
-    truckid,
-    trailerid,
-    orderid,
-    truck,
-    trailer,
-  
-
-    
-  }
-},
 data() {
             return {
-              checklistDetails:[]
+              pdfsrc:'',
+              orderid:''
             }
 },
 mounted(){
@@ -31,19 +16,24 @@ mounted(){
 },
 methods: {
   async getChecklistDetails() {
+
+        let orderid = this.$route.params.id;
          
           let config = {
             headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "http://localhost:8000/",
+              "Content-Type": "application/x-www-form-urlencoded",
+              // "Access-Control-Allow-Origin": "http://127.0.0.1:8000/",
             },
+            responseType: 'blob'
           };
 
           await axios
-          .get(`/checklist/${this.orderid}`)
+          .get(`/checklist/${this.orderid},`,config)
           .then((response) => {
-            this.checklistDetails = response.data
-            console.log(response.data)
+            const blob = new Blob([response.data], { type: "application/pdf" });
+            const objectUrl = URL.createObjectURL(blob);
+            this.pdfsrc = objectUrl;
+            
           })
     }
 }    
@@ -52,21 +42,8 @@ methods: {
 
 </script>
 
-<template>
-    <div>
-    <h4>Truck Reg: {{ truck }} </h4>
-    <h4>Trailer Reg: {{ trailer }} </h4>
-    </div>
-    <!-- <div v-for="(choice, question, index) in checklistDetails"> -->
-    <div  v-for="ques in checklistDetails"
-                            v-bind:key="ques.id"
-                       >
-    <div>   
-      <p>{{ques.question['question_desc']}} {{ques.checklist_choice}}</p>
-    </div>  
-      
-    </div>
-   
+<template>   
+    <pdf :src="pdfsrc"></pdf> 
 
 </template>
 
