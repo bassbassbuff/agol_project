@@ -10,7 +10,7 @@ from customers.serializers import OrderSerializer
 from .services import checklist_create, lab_create, loading_create, lab_results_create
 from .selectors import order_list, checklist_details, labinspection_details, checklist_details_list, get_order
 from .utils import create_pdf
-from .serializers import VehicleSerializer
+from .serializers import VehicleSerializer,OrderSerializer, SafetyChecklistQuestionSerializer
 
 class ChecklistCreateAPI(APIView):
     class InputSerializer(serializers.Serializer):
@@ -57,29 +57,31 @@ class ChecklistListAPI(APIView):
 
 class ChecklistDetailAPI(APIView):
     
-    class OutputSerializer(serializers.ModelSerializer):        
-        class Meta:
-            model = SafetyChecklist
-            fields = ['question','checklist_choice', 'created_at']
-            depth = 2
+    # class OutputSerializer(serializers.ModelSerializer):        
+    #     class Meta:
+    #         model = SafetyChecklist
+    #         fields = ['question','checklist_choice', 'created_at']
+    #         depth = 2
     
-    # class OutputSerializer(serializers.Serializer):
-    #     id = serializers.CharField()
-    #     trailer_details = VehicleSerializer(source="trailer", read_only=True)
-    #     truck_details = VehicleSerializer(source="truck", read_only=True)
-    #     question = serializers.CharField()
-    #     order_id = serializers.CharField()
+    class OutputSerializer(serializers.Serializer):
+        # id = serializers.IntegerField()
+        trailer_details = OrderSerializer(source="order", read_only=True)
+        truck_details = OrderSerializer(source="order", read_only=True)
+        question = serializers.CharField()
+        question_desc = SafetyChecklistQuestionSerializer(source="question", read_only=True)
+        order_id = serializers.IntegerField()
+        checklist_choice = serializers.CharField()
         
     def get(self, request, pk=None):
         serializer = self.OutputSerializer(checklist_details(pk), many=True)
-        print(serializer.data)
-        print(serializer.data[0]['question']['question_desc'])
+        # print(serializer.data)
+        print(serializer.data[0]['trailer_details']['trailer_details']['registration'])
         # contract = Contract.query.get(id)
         # contractor = SafetyChecklist.objects.get(contract.contractor_id)
         # booking = Booking.query.filter_by(contract_id=contract.id).first()
         pdf = create_pdf(
                             booking_no=pk,
-                            contractor=serializer.data[0]['question']['question_desc'],
+                            contractor=serializer.data[0]['trailer_details']['trailer_details']['registration'],
                             contractor_no=2,
                             truck_plate="456",
                             warehouse="contract.warehouse",
@@ -96,7 +98,7 @@ class ChecklistDetailAPI(APIView):
         'Content-Type': 'application/pdf',
         'Content-Disposition': 'attachment; filename="foo.pdf"',
         })
-        # return(response)
+        return(response)
         return Response(serializer.data)
 
 

@@ -1,6 +1,6 @@
 from django.db.models.query import QuerySet
 from django.db.models import Prefetch, Count, Q
-from operations.models import SafetyChecklist, Labinspection
+from operations.models import SafetyChecklist, Labinspection, SafetyChecklistQuestion
 from customers.models import Order
 from django.shortcuts import get_object_or_404
 
@@ -33,11 +33,21 @@ def checklist_details_list() -> QuerySet[SafetyChecklist]:
     return(Order.objects.filter(id__in=flat_list).select_related())
 
 
-def checklist_details(pk) -> QuerySet[SafetyChecklist]:
-    return( SafetyChecklist.objects.filter(order_id=pk).prefetch_related(
-    Prefetch(
-        'order_id',
-        queryset=Order.objects.filter()
+def checklist_details(pk):
+    return(SafetyChecklist.objects.filter(order__id=pk).prefetch_related(Prefetch('order',
+        queryset=Order.objects.select_related()    
+        )))
+    return(Order.objects.filter(id=pk).select_related().prefetch_related(Prefetch('checklistorder',
+        queryset=SafetyChecklist.objects.filter(order_id=pk)        
+        )))
+    return(SafetyChecklist.objects.filter(order_id=pk).prefetch_related(Prefetch(
+        'question', queryset=Order.objects.filter(id=pk).select_related()
+        # .prefetch_related(
+    # Prefetch(
+    #     'checklistorder',
+    #     queryset=SafetyChecklist.objects.prefetch_related('question')
+    # )
+    # )
     )))
     return(SafetyChecklist.objects.filter(order_id=pk).select_related())
     # return(SafetyChecklist.objects.filter(order_set__id=pk).prefetch_related("order_id_set"))

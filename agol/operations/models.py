@@ -42,8 +42,8 @@ class SafetyChecklist(models.Model):
     )
 
 
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    question = models.ForeignKey(SafetyChecklistQuestion, on_delete=models.CASCADE)    
+    order = models.ForeignKey(Order, related_name='checklistorder', on_delete=models.CASCADE)
+    question = models.ForeignKey(SafetyChecklistQuestion, related_name='checklistquestion',  on_delete=models.CASCADE)    
     checklist_choice = models.CharField(max_length=25, null=False, choices=CHECKLIST_CHOICES)     
     created_at = models.DateTimeField(auto_now_add=True)
     # created_by = models.DateTimeField(auto_now_add=True)
