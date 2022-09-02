@@ -31,8 +31,8 @@
                                 <td>{{ order.trailer_details['transporter'] }}</td>
                                 
                                 <td>
+                                <!-- <button @click="submitForm" :value="order.id">PRINT -->
                                 <button>
-
                                     <!-- {{orders}} -->
                                     
                                 <router-link :to="`/print-safety/${order.id}`" class="button is-light">Print</router-link>
@@ -59,7 +59,7 @@
         data() {
             return {
                 orders: [],
-                num_orders: ''
+                // num_orders: ''
             }
         },
         mounted() {
@@ -68,39 +68,54 @@
         methods: {
             async getOrders() {
                 // this.$store.commit('setIsLoading', true)
-                this.showNextButton = false
-                this.showPreviousButton = false
-
+                // this.showNextButton = false
+                // this.showPreviousButton = false
                 await axios
                     .get(`/printsafety/`)
                     .then(response => {
                         console.log(response.data)
                         this.orders = response.data
-                        // this.num_orders = response.data.count
-                        console.log(JSON.parse(JSON.stringify(response.data)))
-                    })
-
-                // await axios
-                //     .get(`/api/v1/leads/?page=${this.currentPage}&search=${this.query}`)
-                //     .then(response => {
-                //         this.leads = response.data.results
-                //         console.log(response.data)
-                        
-                //     // for (let i = 0; i < response.data.length; i++) {
-                //     //     this.leads.push(response.data[i]) 
-
-                //         if (response.data.next) {
-                //             this.showNextButton = true
-                //         }
-                //         if (response.data.previous) {
-                //             this.showPreviousButton = true
-                //         }
-                    // })
+                    })               
                 
                     .catch(error => {
                         console.log(error)
                     })
                 // this.$store.commit('setIsLoading', false)
+            },
+            async submitForm(value) {
+        //         let config = {
+        //     headers: {
+        //         "Content-Type": 'application/octet-stream; charset=utf-8'
+        //         "Content-Disposition": "attachment"; filename="filename.jpg"; filename*="filename.jpg"
+              
+        //     }           
+        //   }
+
+                await axios
+                    .get(`/checklist/${value.target.value}`)
+                    .then(response => {
+                        const blob = new Blob([response.data], {type: response.data.type});
+                        const url = window.URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        const contentDisposition = response.headers['content-disposition'];
+                        let fileName = 'Safety Inspection';
+                        if (contentDisposition) {
+                            const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
+                            if (fileNameMatch.length === 2)
+                                fileName = fileNameMatch[1];
+                        }
+                        link.setAttribute('download', fileName);
+                        document.body.appendChild(link);
+                        link.click();
+                        link.remove();
+                        window.URL.revokeObjectURL(url);
+                                                })
+
+            
+                    .catch(error => {
+                        console.log(error)
+                    })
             }
             
         }

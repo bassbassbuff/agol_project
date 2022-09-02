@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 
 def get_order(pk):
     return get_object_or_404(Order, id=pk)
-
+    return get_object_or_404(Order.objects.select_related(), id=pk)
 
 def order_list(order_status) -> QuerySet[Order]:
     return(Order.objects.filter(order_status=order_status).select_related())

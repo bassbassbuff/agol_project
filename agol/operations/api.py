@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from datetime import datetime
 
 from rest_framework import status, serializers
@@ -57,39 +57,47 @@ class ChecklistListAPI(APIView):
 
 class ChecklistDetailAPI(APIView):
     
-    class OutputSerializer(serializers.ModelSerializer):        
-        class Meta:
-            model = SafetyChecklist
-            fields = ['question','checklist_choice', 'created_at']
-            depth = 1
-
-
+    # class OutputSerializer(serializers.ModelSerializer):        
+    #     class Meta:
+    #         model = SafetyChecklist
+    #         fields = ['question','checklist_choice', 'created_at']
+    #         depth = 1
+    
+    class OutputSerializer(serializers.Serializer):
+        id = serializers.CharField()
+        trailer_details = VehicleSerializer(source="trailer", read_only=True)
+        truck_details = VehicleSerializer(source="truck", read_only=True)
+        question = serializers.CharField()
+        order_id = serializers.CharField()
+        
     def get(self, request, pk=None):
         serializer = self.OutputSerializer(checklist_details(pk), many=True)
-        print(serializer.data[0]['question']['question_desc'])
+        print(serializer.data)
+        # print(serializer.data[0]['question']['question_desc'])
         # contract = Contract.query.get(id)
         # contractor = SafetyChecklist.objects.get(contract.contractor_id)
         # booking = Booking.query.filter_by(contract_id=contract.id).first()
-        pdf = create_pdf(
-                            booking_no=pk,
-                            contractor=serializer.data[0]['question']['question_desc'],
-                            contractor_no=2,
-                            truck_plate="456",
-                            warehouse="contract.warehouse",
-                            date=10/5/2022,
-                            time=datetime.now(),
-                            pallets_pos="pallets_position",
-                            pallets="pallets_actual"
-                            )
-        pdf.seek(0)
-        # return HttpResponse(open(pdf, as_attachment=True, mimetype='application/pdf',
-        #     attachment_filename='booking.pdf', cache_timeout=0))
+        # pdf = create_pdf(
+        #                     booking_no=pk,
+        #                     contractor=serializer.data[0]['question']['question_desc'],
+        #                     contractor_no=2,
+        #                     truck_plate="456",
+        #                     warehouse="contract.warehouse",
+        #                     date=10/5/2022,
+        #                     time=datetime.now(),
+        #                     pallets_pos="pallets_position",
+        #                     pallets="pallets_actual"
+        #                     )
+        # pdf.seek(0)
+        # # return HttpResponse(open(pdf, as_attachment=True, mimetype='application/pdf',
+        # #     attachment_filename='booking.pdf', cache_timeout=0))
 
-        response = HttpResponse(pdf, headers={
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': 'attachment; filename="foo.pdf"',
-        })
-        return(response)
+        # response = HttpResponse(pdf, headers={
+        # 'Content-Type': 'application/pdf',
+        # 'Content-Disposition': 'attachment; filename="foo.pdf"',
+        # })
+        # return(response)
+        return Response(serializer.data)
 
 
 # class ChecklistDetailAPI(APIView):

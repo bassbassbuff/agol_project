@@ -12,6 +12,8 @@
   "dependencies": {
     "axios": "^0.27.2",
     "eslint-plugin-vue": "^8.7.1",
+    "lodash": "^4.17.21",
+    "pdfjs-dist": "^2.16.105",
     "vue": "^3.2.37",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"

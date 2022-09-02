@@ -20,12 +20,25 @@ export default function useSafetyInspectionForm() {
 
 
     const getInspectionPrintout = async () => {
-        await axios.get(`/checklist/${orderid.value}`,config)
-        console.log(response.data)
-        truckid.value = response.data.truck_details.id
+        let response = await axios.get(`/checklist/${orderid.value}`,config)
+        const blob = new Blob([response.data], {type: response.data.type});
+                        const url = window.URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        const contentDisposition = response.headers['content-disposition'];
+                        let fileName = 'Safety Inspection';
+                        if (contentDisposition) {
+                            const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
+                            if (fileNameMatch.length === 2)
+                                fileName = fileNameMatch[1];
+                        }
+                        link.setAttribute('download', fileName);
+                        document.body.appendChild(link);
+                        link.click();
+                        link.remove();
+                        window.URL.revokeObjectURL(url);        
         
-        
-        ;
+       
     }
 
 
