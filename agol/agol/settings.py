@@ -42,12 +42,13 @@ INTERNAL_IPS = [
 # INVESTIGATE WHY CHANGING PORT ALLOWS POSTING ON API THOUGH CHANGES HTTP VERBS IN REQUEST
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3333",
-    "http://localhost:8081",
+    "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:5174",
 ]
 
 CORS_ORIGIN_WHITELIST = (
+    "http://127.0.0.1:5173",
     "http://127.0.0.1:3333",
     'http://localhost:8081',
     

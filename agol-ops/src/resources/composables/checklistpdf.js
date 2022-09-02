@@ -20,21 +20,29 @@ export default function useSafetyInspectionForm() {
 
 
     const getInspectionPrintout = async () => {
-        let response = await axios.get(`/checklist/${orderid.value}`,config)
-        const blob = new Blob([response.data], {type: response.data.type});
+                        let response = await axios.get(`/checklist/${orderid.value}`,config)
+                        const blob = new Blob([response.data], {type: response.data.type});
+                        console.log(blob)
+                        
                         const url = window.URL.createObjectURL(blob);
+                        window.open(url, '_blank');
+                        // const url = "/images/myw3schoolsimage"
+                        
+                        
+                        // const contentDisposition = response.headers['content-disposition', 'application/octet-stream' ];
+                        // let fileName = 'Safety Inspection';
+                        // if (contentDisposition) {
+                        //     const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
+                        //     if (fileNameMatch.length === 2)
+                        //         fileName = fileNameMatch[1];
+                        // } 
+                        // let fileName = 'Safety Inspection'; 
                         const link = document.createElement('a');
-                        link.href = url;
-                        const contentDisposition = response.headers['content-disposition'];
-                        let fileName = 'Safety Inspection';
-                        if (contentDisposition) {
-                            const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
-                            if (fileNameMatch.length === 2)
-                                fileName = fileNameMatch[1];
-                        }
+                        link.href = url;                  
+                        
                         link.setAttribute('download', fileName);
                         document.body.appendChild(link);
-                        link.click();
+                        link.click();                        
                         link.remove();
                         window.URL.revokeObjectURL(url);        
         

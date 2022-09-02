@@ -34,8 +34,14 @@ def checklist_details_list() -> QuerySet[SafetyChecklist]:
 
 
 def checklist_details(pk) -> QuerySet[SafetyChecklist]:
+    return( SafetyChecklist.objects.filter(order_id=pk).prefetch_related(
+    Prefetch(
+        'order_id',
+        queryset=Order.objects.filter()
+    )))
     return(SafetyChecklist.objects.filter(order_id=pk).select_related())
-    # return(SafetyChecklist.objects.filter(personscore_set__name="Bob").prefetch_related("personscore_set"))
+    # return(SafetyChecklist.objects.filter(order_set__id=pk).prefetch_related("order_id_set"))
+    return(SafetyChecklist.objects.filter(personscore_set__name="Bob").prefetch_related("personscore_set"))
 
 def labinspection_details(pk) -> QuerySet[Labinspection]:
     
