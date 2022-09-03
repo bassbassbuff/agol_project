@@ -33,7 +33,22 @@ def checklist_details_list() -> QuerySet[SafetyChecklist]:
     return(Order.objects.filter(id__in=flat_list).select_related())
 
 
-def checklist_details(pk):
+def checklist_details(pk)-> QuerySet[SafetyChecklist]:
+    return(SafetyChecklist.objects.filter(order__id=pk).select_related().prefetch_related(Prefetch('order',
+        queryset=Order.objects.select_related()    
+        )))
+
+    '''
+    Dead homies lay beyond this line. 
+    I did a lot of trial and error before landing to what I presume is an efficient query.
+    But I needed to get the Question description for all the checklist 
+    results which is covered by first select related.
+    I then fetched the related order with the prefetch related part and got 
+    the truck details with the second select related.
+    In all honesty, this is magic from what I can tell.
+    Long live ORM.
+    Peace out.
+    '''
     return(SafetyChecklist.objects.filter(order__id=pk).prefetch_related(Prefetch('order',
         queryset=Order.objects.select_related()    
         )))
