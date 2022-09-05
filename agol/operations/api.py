@@ -6,7 +6,7 @@ from rest_framework import status, serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import SafetyChecklist
-from customers.serializers import OrderSerializer
+# from customers.serializers import OrderSerializer
 from .services import checklist_create, lab_create, loading_create, lab_results_create
 from .selectors import order_list, checklist_details, labinspection_details, checklist_details_list, get_order
 from .utils import create_pdf
@@ -64,10 +64,9 @@ class ChecklistDetailAPI(APIView):
     #         depth = 2
     
     class OutputSerializer(serializers.Serializer):
-        # id = serializers.IntegerField()
+        # id = serializers.IntegerField()        
         trailer_details = OrderSerializer(source="order", read_only=True)
         truck_details = OrderSerializer(source="order", read_only=True)
-        question = serializers.CharField()
         question_desc = SafetyChecklistQuestionSerializer(source="question", read_only=True)
         order_id = serializers.IntegerField()
         checklist_choice = serializers.CharField()
@@ -75,15 +74,33 @@ class ChecklistDetailAPI(APIView):
     def get(self, request, pk=None):
         serializer = self.OutputSerializer(checklist_details(pk), many=True)
         # print(serializer.data)
-        print(serializer.data[0]['trailer_details']['trailer_details']['registration'])
+        print(serializer.data[0]["checklist_choice"])
+        print(serializer.data[1]["checklist_choice"])
         # contract = Contract.query.get(id)
         # contractor = SafetyChecklist.objects.get(contract.contractor_id)
         # booking = Booking.query.filter_by(contract_id=contract.id).first()
         pdf = create_pdf(
-                            booking_no=pk,
-                            contractor=serializer.data[0]['trailer_details']['trailer_details']['registration'],
-                            contractor_no=2,
-                            truck_plate="456",
+                            # booking_no=pk,
+                            order_no=pk,
+                            # contractor=serializer.data[0]['trailer_details']['trailer_details']['registration'],
+                            truck_reg=serializer.data[0]['truck_details']['truck_details']['registration'],
+                            truck_epra=serializer.data[0]['truck_details']['truck_details']['epra_no'],
+                            truck_trans=serializer.data[0]['truck_details']['truck_details']['transporter'],                            
+                            trailer_reg=serializer.data[0]['trailer_details']['trailer_details']['registration'],
+                            trailer_epra=serializer.data[0]['trailer_details']['trailer_details']['epra_no'],
+                            trailer_trans=serializer.data[0]['truck_details']['truck_details']['transporter'],
+                            # Questions
+
+                            q1=serializer.data[0]["question_desc"]['question_desc'],
+                            q2=serializer.data[1]["question_desc"]['question_desc'],
+                            q3=serializer.data[2]["question_desc"]['question_desc'],
+                            q4=serializer.data[3]["question_desc"]['question_desc'],
+                            c1=serializer.data[0]["checklist_choice"],
+                            c2=serializer.data[1]["checklist_choice"],
+                            c3=serializer.data[2]["checklist_choice"],
+                            c4=serializer.data[3]["checklist_choice"],
+
+
                             warehouse="contract.warehouse",
                             date=10/5/2022,
                             time=datetime.now(),
@@ -91,9 +108,7 @@ class ChecklistDetailAPI(APIView):
                             pallets="pallets_actual"
                             )
         pdf.seek(0)
-        # return HttpResponse(open(pdf, as_attachment=True, mimetype='application/pdf',
-        #     attachment_filename='booking.pdf', cache_timeout=0))
-
+        
         response = HttpResponse(pdf, headers={
         'Content-Type': 'application/pdf',
         'Content-Disposition': 'attachment; filename="foo.pdf"',

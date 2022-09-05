@@ -151,7 +151,7 @@ class OrderSerializer(serializers.ModelSerializer):
             "created_at",
             "created_by",
         ),
-        fields = '__all__'
+        fields = ['trailer_details','truck_details','driver_details']
 
 # class LabResultsSerializer(serializers.ModelSerializer):
 #     # oxygen = LabinspectionSerializer(read_only=True)

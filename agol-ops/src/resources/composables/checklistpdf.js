@@ -12,7 +12,7 @@ export default function useSafetyInspectionForm() {
 
     let config = {
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/pdf",
           // "Access-Control-Allow-Origin": "http://127.0.0.1:8000/",
         },
         responseType: 'blob'
